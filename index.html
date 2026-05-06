@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1d1d1f;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 85%;
+            max-width: 500px;
+        }
+
+        h2 {
+            font-weight: 500;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+            display: none;
+            background: #000;
+        }
+
+        .loader {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #007aff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #error-msg {
+            color: #ff3b30;
+            display: none;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-container">
+    <h2 id="status">Завантаження контенту...</h2>
+    <div id="loader" class="loader"></div>
+    
+    <video id="player" controls playsinline>
+        <source id="video-src" src="" type="video/mp4">
+        Ваш пристрій не підтримує відтворення відео.
+    </video>
+
+    <p id="error-msg">Не вдалося знайти відео. Спробуйте ще раз.</p>
+</div>
+
+<script>
+    const storageUrl = "https://cdn.jsdelivr.net/gh/gaga0508198/For-legedza-idkwhattoelsetosaysoimjustwritingsomeidkwhatjustsoitmore-ecure@main/";
+
+    const params = new URLSearchParams(window.location.search);
+    const videoKey = params.get('id');
+
+    const videoElement = document.getElementById('player');
+    const sourceElement = document.getElementById('video-src');
+    const statusText = document.getElementById('status');
+    const loader = document.getElementById('loader');
+    const errorMsg = document.getElementById('error-msg');
+
+    if (videoKey) {
+        const fileUrl = storageUrl + videoKey + ".mp4";
+        
+        sourceElement.src = fileUrl;
+        videoElement.load();
+
+        videoElement.oncanplay = () => {
+            loader.style.display = "none";
+            videoElement.style.display = "block";
+            statusText.innerText = "Відео знайдено";
+        };
+
+        videoElement.onerror = () => {
+            loader.style.display = "none";
+            statusText.innerText = "Помилка";
+            errorMsg.style.display = "block";
+        };
+    } else {
+        loader.style.display = "none";
+        statusText.innerText = "Ключ не знайдено";
+    }
+</script>
+
+</body>
+</html>
