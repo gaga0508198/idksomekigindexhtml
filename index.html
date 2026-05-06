@@ -82,8 +82,8 @@
 <script>
     const storageUrl = "https://cdn.jsdelivr.net/gh/gaga0508198/For-legedza-idkwhattoelsetosaysoimjustwritingsomeidkwhatjustsoitmore-ecure@main/";
 
-    const params = new URLSearchParams(window.location.search);
-    const videoKey = params.get('id');
+    const urlParams = window.location.search.split('id=');
+    let videoKey = urlParams.length > 1 ? urlParams[1] : null;
 
     const videoElement = document.getElementById('player');
     const sourceElement = document.getElementById('video-src');
@@ -92,7 +92,8 @@
     const errorMsg = document.getElementById('error-msg');
 
     if (videoKey) {
-        let fileName = videoKey;
+        let fileName = decodeURIComponent(videoKey);
+        
         if (!fileName.toLowerCase().endsWith('.mp4')) { 
             fileName += '.mp4'; 
         }
@@ -110,9 +111,8 @@
 
         videoElement.onerror = () => {
             loader.style.display = "none";
-            statusText.innerText = "Помилка";
+            statusText.innerText = "Помилка завантаження";
             errorMsg.style.display = "block";
-            console.error("Не вдалося завантажити файл за адресою:", fileUrl);
         };
     } else {
         loader.style.display = "none";
