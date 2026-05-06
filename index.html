@@ -92,7 +92,12 @@
     const errorMsg = document.getElementById('error-msg');
 
     if (videoKey) {
-        const fileUrl = storageUrl + videoKey + ".mp4";
+        let fileName = videoKey;
+        if (!fileName.toLowerCase().endsWith('.mp4')) { 
+            fileName += '.mp4'; 
+        }
+        
+        const fileUrl = storageUrl + fileName;
         
         sourceElement.src = fileUrl;
         videoElement.load();
@@ -107,6 +112,7 @@
             loader.style.display = "none";
             statusText.innerText = "Помилка";
             errorMsg.style.display = "block";
+            console.error("Не вдалося завантажити файл за адресою:", fileUrl);
         };
     } else {
         loader.style.display = "none";
